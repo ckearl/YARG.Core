@@ -93,6 +93,23 @@ namespace YARG.Core.Chart
             NoteMask |= GetNoteMask(note.Fret);
         }
 
+        /// <summary>
+        /// Recomputes <see cref="NoteMask"/> and <see cref="DisjointMask"/> for this note and its children
+        /// from their current frets. Call on the parent after changing any fret in the chord.
+        /// </summary>
+        public void RecalculateMasks()
+        {
+            NoteMask = GetNoteMask(Fret);
+            DisjointMask = GetNoteMask(Fret);
+
+            foreach (var child in ChildNotes)
+            {
+                child.NoteMask = GetNoteMask(child.Fret);
+                child.DisjointMask = GetNoteMask(child.Fret);
+                NoteMask |= child.NoteMask;
+            }
+        }
+
         public override void ResetNoteState()
         {
             base.ResetNoteState();
